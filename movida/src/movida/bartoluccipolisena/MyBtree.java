@@ -1,418 +1,502 @@
 package movida.bartoluccipolisena;
-
-import java.util.Stack;
-
 import movida.commons.Movie;
 
-public class MyBtree extends StrutturaDati {
 
-  private int T;
-
-  public class Node {
-    int n;
-    Movie key[] = new Movie[2 * T - 1];
-    Node child[] = new Node[2 * T];
-    boolean leaf = true;
-
-    public Movie Find(Movie k) {
-      for (int i = 0; i < this.n; i++) {
-        if (this.key[i].equals(k)) {
-          return key[i];
-        }
-      }
-      return null;
-    };
-  }
-
-  public MyBtree() {
-    T = 3;
-    root = new Node();
-    root.n = 0;
-    root.leaf = true;
-  }
-
-  private Node root;
-
-  // Search the key
-  private Node Search(Node x, Movie key) {
-    int i = 0;
-    if (x == null)
-      return x;
-    for (i = 0; i < x.n; i++) {
-    	if (key.equals(x.key[i])) {
-            return x;
-          }
-      if (key.compareTo(x.key[i]) < 1) {
-        break;
-      }
-      
-    }
-    if (x.leaf) {
-      return null;
-    } else {
-      return Search(x.child[i], key);
-    }
-  }
-
-  // Split function
-  private void Split(Node x, int pos, Node y) {
-    Node z = new Node();
-    z.leaf = y.leaf;
-    z.n = T - 1;
-    for (int j = 0; j < T - 1; j++) {
-      z.key[j] = y.key[j + T];
-    }
-    if (!y.leaf) {
-      for (int j = 0; j < T; j++) {
-        z.child[j] = y.child[j + T];
-      }
-    }
-    y.n = T - 1;
-    for (int j = x.n; j >= pos + 1; j--) {
-      x.child[j + 1] = x.child[j];
-    }
-    x.child[pos + 1] = z;
-
-    for (int j = x.n - 1; j >= pos; j--) {
-      x.key[j + 1] = x.key[j];
-    }
-    x.key[pos] = y.key[T - 1];
-    x.n = x.n + 1;
-  }
-
-  // Insert the key
-  public void Insert(final Movie key) {
-    Node r = root;
-    if (r.n == 2 * T - 1) {
-      Node s = new Node();
-      root = s;
-      s.leaf = false;
-      s.n = 0;
-      s.child[0] = r;
-      Split(s, 0, r);
-      _Insert(s, key);
-    } else {
-      _Insert(r, key);
-    }
-  }
-
-  // Insert the node
-  final private void _Insert(Node x, Movie k) {
-
-    if (x.leaf) {
-      int i = 0;
-      for (i = x.n - 1; i >= 0 && k.compareTo(x.key[i]) < 1; i--) {
-        x.key[i + 1] = x.key[i];
-      }
-      x.key[i + 1] = k;
-      x.n = x.n + 1;
-    } else {
-      int i = 0;
-      for (i = x.n - 1; i >= 0 && k.compareTo(x.key[i]) < 1; i--) {
-      }
-      ;
-      i++;
-      Node tmp = x.child[i];
-      if (tmp.n == 2 * T - 1) {
-        Split(x, i, tmp);
-        if (k.compareTo(x.key[i]) < 1) {
-          i++;
-        }
-      }
-      _Insert(x.child[i], k);
-    }
-
-  }
-
-  public void Show() {
-    Show(root);
-  }
-
-  private int getPosition(Node[] nodes,Movie key) {
-	  for(int i = 0; i < nodes.length; i++) {
-		  if(nodes[i].equals(key)) {
-			  return i;
-		  }
-	  }
-	  return -1;
-  }
+public class MyBtree extends StrutturaDati{ 
+    public BTreeNode root; // Pointer to root node 
+    public int t; // Minimum degree 
+    int size = 0; //size of tree;
   
-  private void Remove(Node x, Movie key) {
-    Movie pos = x.Find(key);
-    int poss = 0;
-    if (pos != null) {
-      if (x.leaf) {
-        int i = 0;
-        for (i = 0; i < x.n && !x.key[i].equals(key); i++) {
-        }
-        ;
-        for (; i < x.n; i++) {
-          if (i != 2 * T - 2) {
-            x.key[i] = x.key[i + 1];
-          }
-        }
-        x.n--;
-        return;
-      }
-      if (!x.leaf) {
+    // Constructor (Initializes tree as empty) 
+    MyBtree() { 
+        this.root = null; 
+        this.t = 3; 
+    } 
+  
+    // function to traverse the tree 
+    public void traverse() { 
+        if (this.root != null) 
+            this.root.traverse(); 
+        System.out.println(); 
+    } 
+  
+    // function to search a key in this tree 
+    public BTreeNode search(Movie k) { 
+        if (this.root == null) 
+            return null; 
+        else
+            return this.root.search(k); 
+    } 
     
-        Node pred = x.child[getPosition(x.child,pos)];
-        Movie predKey = null;
-        if (pred.n >= T) {
-          for (;;) {
-            if (pred.leaf) {
-              System.out.println(pred.n);
-              predKey = pred.key[pred.n - 1];
-              break;
-            } else {
-              pred = pred.child[pred.n];
+    void insert(Movie k) {
+    	size++;
+    	if(root == null) {
+    		root = new BTreeNode(t,true);
+    		root.keys[0] = k;
+    		root.n = 1;
+    	}else {
+    		if(root.n == 2*t-1) {
+    			BTreeNode s = new BTreeNode(t,false);
+    			s.C[0] = root;
+    			s.splitChild(0,root);
+    			int i=0;
+    			if(s.keys[0].compareTo(k) < 1) {
+    				i++;
+    			}
+    			s.C[i].insertNonFull(k);
+    			root = s;
+    		}else {
+    			root.insertNonFull(k);
+    		}
+    	}
+    }
+    
+    void remove(Movie k) {
+    	size--;
+    	if(root == null) {
+    		System.out.println("Empty tree");
+    		return;
+    	}
+    	root.remove(k);
+    	if(root.n == 0) {
+    		BTreeNode tmp = root;
+    		if(root.leaf)
+    			root = null;
+    		else
+    			root = root.C[0];
+    	}
+    	return;
+    }
+    
+ // A BTree node  
+    class BTreeNode { 
+        Movie[] keys; // An array of keys 
+        int t; // Minimum degree (defines the range for number of keys) 
+        BTreeNode[] C; // An array of child pointers 
+        int n; // Current number of keys 
+        boolean leaf; // Is true when node is leaf. Otherwise false 
+      
+        // Constructor 
+        BTreeNode(int t, boolean leaf) { 
+            this.t = t; 
+            this.leaf = leaf; 
+            this.keys = new Movie[2 * t - 1]; 
+            this.C = new BTreeNode[2 * t]; 
+            this.n = 0; 
+        }
+        
+        public int findKey(Movie k) {//penso il problema sia qui
+        	int idx = 0;
+        	while (idx<n && keys[idx].compareTo(k) < 0)        	
+              ++idx; 
+            return idx; 
+        }
+      
+        public void remove(Movie k) {
+        	int idx = findKey(k);
+          	if(idx < n && keys[idx].equals(k)) {
+        		if(leaf)
+        			removeFromLeaf(idx);
+        		else
+        			removeFromNonLeaf(idx);
+        	}else {
+        		if(leaf) {
+        			System.out.println("The key "+k+" does not exist in tree");
+        			return;
+        		}
+        		boolean flag = ((idx==n)? true : false);
+        		if(C[idx].n < t) 
+        			fill(idx);
+        		if(flag && idx > n) 
+        			C[idx - 1].remove(k);
+        		else
+        			C[idx].remove(k);
+        	}
+        	return;
+		}
+        
+        public void removeFromLeaf(int idx) {
+            // Move all the keys after the idx-th pos one place backward 
+            for (int i=idx+1; i<n; ++i) 
+                keys[i-1] = keys[i]; 
+          
+            // Reduce the count of keys 
+            n--; 
+          
+            return;
+        }
+        
+        public void removeFromNonLeaf(int idx) {
+        	Movie k = keys[idx]; 
+        	  
+            // If the child that precedes k (C[idx]) has atleast t keys, 
+            // find the predecessor 'pred' of k in the subtree rooted at 
+            // C[idx]. Replace k by pred. Recursively delete pred 
+            // in C[idx] 
+            if (C[idx].n >= t) 
+            { 
+                Movie pred = getPred(idx); 
+                keys[idx] = pred; 
+                C[idx].remove(pred); 
+            } 
+          
+            // If the child C[idx] has less that t keys, examine C[idx+1]. 
+            // If C[idx+1] has atleast t keys, find the successor 'succ' of k in 
+            // the subtree rooted at C[idx+1] 
+            // Replace k by succ 
+            // Recursively delete succ in C[idx+1] 
+            else if  (C[idx+1].n >= t) 
+            { 
+                Movie succ = getSucc(idx); 
+                keys[idx] = succ; 
+                C[idx+1].remove(succ); 
+            } 
+          
+            // If both C[idx] and C[idx+1] has less that t keys,merge k and all of C[idx+1] 
+            // into C[idx] 
+            // Now C[idx] contains 2t-1 keys 
+            // Free C[idx+1] and recursively delete k from C[idx] 
+            else
+            { 
+                merge(idx); 
+                C[idx].remove(k); 
+            } 
+            return; 
+        }
+        
+        public Movie getPred(int idx) {
+            // Keep moving to the right most node until we reach a leaf 
+            BTreeNode cur = C[idx]; 
+            while (!cur.leaf) 
+                cur = cur.C[cur.n]; 
+          
+            // Return the last key of the leaf 
+            return cur.keys[cur.n-1]; 
+        }
+        
+        public Movie getSucc(int idx) {
+            // Keep moving the left most node starting from C[idx+1] until we reach a leaf 
+            BTreeNode cur = C[idx+1]; 
+            while (!cur.leaf) 
+                cur = cur.C[0]; 
+          
+            // Return the first key of the leaf 
+            return cur.keys[0]; 
+        }
+        
+        public void fill(int idx) {
+        	 // If the previous child(C[idx-1]) has more than t-1 keys, borrow a key 
+            // from that child 
+            if (idx!=0 && C[idx-1].n >= t) 
+                borrowFromPrev(idx); 
+          
+            // If the next child(C[idx+1]) has more than t-1 keys, borrow a key 
+            // from that child 
+            else if (idx!=n && C[idx+1].n >= t) 
+                borrowFromNext(idx); 
+          
+            // Merge C[idx] with its sibling 
+            // If C[idx] is the last child, merge it with with its previous sibling 
+            // Otherwise merge it with its next sibling 
+            else
+            { 
+                if (idx != n) 
+                    merge(idx); 
+                else
+                    merge(idx-1); 
+            } 
+            return; 
+        }
+        
+        public void borrowFromPrev(int idx) {
+        	BTreeNode child = C[idx]; 
+            BTreeNode sibling = C[idx-1]; 
+          
+            // The last key from C[idx-1] goes up to the parent and key[idx-1] 
+            // from parent is inserted as the first key in C[idx]. Thus, the  loses 
+            // sibling one key and child gains one key 
+          
+            // Moving all key in C[idx] one step ahead 
+            for (int i=child.n-1; i>=0; --i) 
+                child.keys[i+1] = child.keys[i]; 
+          
+            // If C[idx] is not a leaf, move all its child pointers one step ahead 
+            if (!child.leaf) 
+            { 
+                for(int i=child.n; i>=0; --i) 
+                    child.C[i+1] = child.C[i]; 
+            } 
+          
+            // Setting child's first key equal to keys[idx-1] from the current node 
+            child.keys[0] = keys[idx-1]; 
+          
+            // Moving sibling's last child as C[idx]'s first child 
+            if(!child.leaf) 
+                child.C[0] = sibling.C[sibling.n]; 
+          
+            // Moving the key from the sibling to the parent 
+            // This reduces the number of keys in the sibling 
+            keys[idx-1] = sibling.keys[sibling.n-1]; 
+          
+            child.n += 1; 
+            sibling.n -= 1; 
+          
+            return; 
+        }
+        
+        public void  borrowFromNext(int idx) { 
+          
+            BTreeNode child = C[idx]; 
+            BTreeNode sibling = C[idx+1]; 
+          
+            // keys[idx] is inserted as the last key in C[idx] 
+            child.keys[(child.n)] = keys[idx]; 
+          
+            // Sibling's first child is inserted as the last child 
+            // into C[idx] 
+            if (!(child.leaf)) 
+                child.C[(child.n)+1] = sibling.C[0]; 
+          
+            //The first key from sibling is inserted into keys[idx] 
+            keys[idx] = sibling.keys[0]; 
+          
+            // Moving all keys in sibling one step behind 
+            for (int i=1; i<sibling.n; ++i) 
+                sibling.keys[i-1] = sibling.keys[i]; 
+          
+            // Moving the child pointers one step behind 
+            if (!sibling.leaf) 
+            { 
+                for(int i=1; i<=sibling.n; ++i) 
+                    sibling.C[i-1] = sibling.C[i]; 
+            } 
+          
+            // Increasing and decreasing the key count of C[idx] and C[idx+1] 
+            // respectively 
+            child.n += 1; 
+            sibling.n -= 1; 
+          
+            return; 
+        }
+        
+        public void merge(int idx) {
+        	BTreeNode child = C[idx]; 
+            BTreeNode sibling = C[idx+1]; 
+          
+            // Pulling a key from the current node and inserting it into (t-1)th 
+            // position of C[idx] 
+            child.keys[t-1] = keys[idx]; 
+          
+            // Copying the keys from C[idx+1] to C[idx] at the end 
+            for (int i=0; i<sibling.n; ++i) 
+                child.keys[i+t] = sibling.keys[i]; 
+          
+            // Copying the child pointers from C[idx+1] to C[idx] 
+            if (!child.leaf) 
+            { 
+                for(int i=0; i<=sibling.n; ++i) 
+                    child.C[i+t] = sibling.C[i]; 
+            } 
+          
+            // Moving all keys after idx in the current node one step before - 
+            // to fill the gap created by moving keys[idx] to C[idx] 
+            for (int i=idx+1; i<n; ++i) 
+                keys[i-1] = keys[i]; 
+          
+            // Moving the child pointers after (idx+1) in the current node one 
+            // step before 
+            for (int i=idx+2; i<=n; ++i) 
+                C[i-1] = C[i]; 
+          
+            // Updating the key count of child and the current node 
+            child.n += sibling.n+1; 
+            n--;
+            
+            return; 
+        }
+
+		// A function to traverse all nodes in a subtree rooted with this node 
+        public void traverse() { 
+      
+            // There are n keys and n+1 children, travers through n keys 
+            // and first n children 
+            int i = 0; 
+            for (i = 0; i < this.n; i++) { 
+      
+                // If this is not leaf, then before printing key[i], 
+                // traverse the subtree rooted with child C[i]. 
+                if (this.leaf == false) { 
+                    C[i].traverse(); 
+                } 
+                System.out.print(keys[i] + " "); 
+            } 
+      
+            // Print the subtree rooted with last child 
+            if (leaf == false) 
+                C[i].traverse(); 
+        } 
+      
+        // A function to search a key in the subtree rooted with this node. 
+        BTreeNode search(Movie k) { // returns NULL if k is not present. 
+      
+            // Find the first key greater than or equal to k 
+            int i = 0; 
+            while (i < n && k.compareTo(keys[i]) > 0) 
+                i++; 
+      
+            // If the found key is equal to k, return this node 
+           
+              //if(keys[i].equals(k))
+            if(i < n && keys[i]!=null && keys[i].getTitle().equalsIgnoreCase(k.getTitle()))
+            	return this; 
+      
+            // If the key is not found here and this is a leaf node 
+            if (leaf == true) 
+                return null; 
+      
+            // Go to the appropriate child 
+            return C[i].search(k); 
+      
+        }
+        
+        void insertNonFull(Movie k) {
+        	int i = n-1;
+        	if(leaf == true) {
+        		while(i>= 0 && keys[i].compareTo(k) > 0) {
+        			keys[i+1] = keys[i];
+        			i--;
+        		}
+        		keys[i+1] = k;
+        		n = n+1;
+        	}else {
+        		while(i >= 0 && keys[i].compareTo(k) > 0) 
+        			i--;
+        		if(C[i+1].n == 2*t-1) {
+        			splitChild(i+1,C[i+1]);
+        			if(keys[i+1].compareTo(k) < 1)
+        				i++;
+        		}
+        		C[i+1].insertNonFull(k);
+        	}
+        }
+        
+        void splitChild(int i, BTreeNode y) {
+        	BTreeNode z = new BTreeNode(y.t,y.leaf);
+        	z.n = t-1;
+        	for(int j=0; j< t-1; j++) 
+        		z.keys[j] = y.keys[j+t];
+        	if(y.leaf == false) {
+        		for(int j=0; j<t; j++) 
+        			z.C[j] = y.C[j+t];
+        		
+        	}
+        	y.n = t-1;
+        	for(int j = n; j >= i+1; j--) 
+        		C[j+1] = C[j];
+        	C[i+1] = z;
+        	for(int j = n-1; j>= i; j--) 
+        		keys[j+1] = keys[j];
+        	keys[i] = y.keys[t-1];
+        	n=n+1;
+        }
+    }
+
+	@Override
+	public void insert(Movie movie, Comparable k) {
+		insert(movie);
+		
+	}
+
+	@Override
+	public void delete(Comparable k) {
+		Movie movieToRemove = new Movie(k.toString());
+		remove(movieToRemove);
+	}
+
+	@Override
+	public Movie search(Comparable k) {
+		Movie movieToSearch = new Movie(k.toString());
+		BTreeNode node = search(movieToSearch);
+		if(node!=null) {
+			for(int i=0; i < node.n; i++) {
+				if(node.keys[i].getTitle().equals(k.toString())) {
+					return node.keys[i];
+				}
+			}
+		}
+		return null;
+	}
+
+	public int sizeOfTree() {
+		return size;
+	}
+	
+	public int getNextPosition(Movie[] listOfMovies) {
+		int i;
+		for(i = 0; i < listOfMovies.length; i++) {
+			if(listOfMovies[i] == null) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	@Override
+	public Movie[] getMovies() {
+		Movie[] listOfMovies = new Movie[sizeOfTree()];
+		getMovies(root,listOfMovies,0);
+		return listOfMovies;
+	}
+
+	
+	
+	
+	public void getMovies(BTreeNode node,Movie[] listOfMovies,int k) {
+		 
+        int i = 0; 
+        for (i = 0; i < node.n; i++) { 
+  
+            if (node.leaf == false) {
+            	k = getNextPosition(listOfMovies);
+            	getMovies(node.C[i],listOfMovies,k);
+                
             }
-          }
-          Remove(pred, predKey);
-          x.key[getPosition(x.child,pos)] = predKey;
-          return;
+            k = getNextPosition(listOfMovies);
+            listOfMovies[k] = node.keys[i];
+            k++;
+        } 
+  
+
+        if (node.leaf == false) {
+        	k = getNextPosition(listOfMovies);
+        	getMovies(node.C[i],listOfMovies,k);
         }
+        
+		return;
+	}
 
-        Node nextNode = x.child[getPosition(x.child,pos) + 1];
-        if (nextNode.n >= T) {
-          Movie nextKey = nextNode.key[0];
-          if (!nextNode.leaf) {
-            nextNode = nextNode.child[0];
-            for (;;) {
-              if (nextNode.leaf) {
-                nextKey = nextNode.key[nextNode.n - 1];
-                break;
-              } else {
-                nextNode = nextNode.child[nextNode.n];
-              }
-            }
-          }
-          Remove(nextNode, nextKey);
-          x.key[getPosition(x.child,pos)] = nextKey;
-          return;
-        }
+	@Override
+	public void clear() {
+		Movie[] listOfMovies = getMovies();
+		for(int i = 0; i<listOfMovies.length; i++) {
+			delete(listOfMovies[i].getTitle());
+		}
+		root = null;
+		
+	}
 
-        int temp = pred.n + 1;
-        pred.key[pred.n++] = x.key[getPosition(x.child,pos)];
-        for (int i = 0, j = pred.n; i < nextNode.n; i++) {
-          pred.key[j++] = nextNode.key[i];
-          pred.n++;
-        }
-        for (int i = 0; i < nextNode.n + 1; i++) {
-          pred.child[temp++] = nextNode.child[i];
-        }
-
-        x.child[getPosition(x.child,pos)] = pred;
-        for (int i = getPosition(x.child,pos); i < x.n; i++) {
-          if (i != 2 * T - 2) {
-            x.key[i] = x.key[i + 1];
-          }
-        }
-        for (int i = getPosition(x.child,pos) + 1; i < x.n + 1; i++) {
-          if (i != 2 * T - 1) {
-            x.child[i] = x.child[i + 1];
-          }
-        }
-        x.n--;
-        if (x.n == 0) {
-          if (x == root) {
-            root = x.child[0];
-          }
-          x = x.child[0];
-        }
-        Remove(pred, key);
-        return;
-      }
-    } else {
-      for (poss = 0; poss < x.n; poss++) {
-        if (x.key[getPosition(x.child,pos)].compareTo(key) > 1) {
-          break;
-        }
-      }
-      Node tmp = x.child[poss];
-      if (tmp.n >= T) {
-        Remove(tmp, key);
-        return;
-      }
-      if (true) {
-        Node nb = null;
-        Movie devider = null;
-
-        if (poss != x.n && x.child[getPosition(x.child,pos) + 1].n >= T) {
-          devider = x.key[getPosition(x.child,pos)];
-          nb = x.child[getPosition(x.child,pos) + 1];
-          x.key[getPosition(x.child,pos)] = nb.key[0];
-          tmp.key[tmp.n++] = devider;
-          tmp.child[tmp.n] = nb.child[0];
-          for (int i = 1; i < nb.n; i++) {
-            nb.key[i - 1] = nb.key[i];
-          }
-          for (int i = 1; i <= nb.n; i++) {
-            nb.child[i - 1] = nb.child[i];
-          }
-          nb.n--;
-          Remove(tmp, key);
-          return;
-        } else if (poss != 0 && x.child[getPosition(x.child,pos) - 1].n >= T) {
-
-          devider = x.key[getPosition(x.child,pos) - 1];
-          nb = x.child[getPosition(x.child,pos) - 1];
-          x.key[getPosition(x.child,pos) - 1] = nb.key[nb.n - 1];
-          Node child = nb.child[nb.n];
-          nb.n--;
-
-          for (int i = tmp.n; i > 0; i--) {
-            tmp.key[i] = tmp.key[i - 1];
-          }
-          tmp.key[0] = devider;
-          for (int i = tmp.n + 1; i > 0; i--) {
-            tmp.child[i] = tmp.child[i - 1];
-          }
-          tmp.child[0] = child;
-          tmp.n++;
-          Remove(tmp, key);
-          return;
-        } else {
-          Node lt = null;
-          Node rt = null;
-          boolean last = false;
-          if (getPosition(x.child,pos) != x.n) {
-            devider = x.key[getPosition(x.child,pos)];
-            lt = x.child[getPosition(x.child,pos)];
-            rt = x.child[getPosition(x.child,pos) + 1];
-          } else {
-            devider = x.key[getPosition(x.child,pos) - 1];
-            rt = x.child[getPosition(x.child,pos)];
-            lt = x.child[getPosition(x.child,pos) - 1];
-            last = true;
-            poss--;
-          }
-          for (int i = getPosition(x.child,pos); i < x.n - 1; i++) {
-            x.key[i] = x.key[i + 1];
-          }
-          for (int i = getPosition(x.child,pos) + 1; i < x.n; i++) {
-            x.child[i] = x.child[i + 1];
-          }
-          x.n--;
-          lt.key[lt.n++] = devider;
-
-          for (int i = 0, j = lt.n; i < rt.n + 1; i++, j++) {
-            if (i < rt.n) {
-              lt.key[j] = rt.key[i];
-            }
-            lt.child[j] = rt.child[i];
-          }
-          lt.n += rt.n;
-          if (x.n == 0) {
-            if (x == root) {
-              root = x.child[0];
-            }
-            x = x.child[0];
-          }
-          Remove(lt, key);
-          return;
-        }
-      }
-    }
-  }
-
-  public void Remove(Movie key) {
-    Node x = Search(root, key);
-    if (x == null) {
-      return;
-    }
-    Remove(root, key);
-  }
-
-  public void Task(Movie a, Movie b) {
-    Stack<Movie> st = new Stack<>();
-    FindKeys(a, b, root, st);
-    while (st.isEmpty() == false) {
-      this.Remove(root, st.pop());
-    }
-  }
-
-  private void FindKeys(Movie a, Movie b, Node x, Stack<Movie> st) {
-    int i = 0;
-    for (i = 0; i < x.n && x.key[i].compareTo(b) < 1; i++) {
-      if (x.key[i].compareTo(a) > 1) {
-        st.push(x.key[i]);
-      }
-    }
-    if (!x.leaf) {
-      for (int j = 0; j < i + 1; j++) {
-        FindKeys(a, b, x.child[j], st);
-      }
-    }
-  }
-
-  public boolean Contain(Movie k) {
-    if (this.Search(root, k) != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // Show the node
-  private void Show(Node x) {
-    assert (x == null);
-    for (int i = 0; i < x.n; i++) {
-      System.out.print(x.key[i] + " ");
-    }
-    if (!x.leaf) {
-      for (int i = 0; i < x.n + 1; i++) {
-        Show(x.child[i]);
-      }
-    }
-  }
-
-  @Override
-public String toString() {
+	@Override
+	public String toString() {
 		if(root == null) {
 			return "Albero vuoto";
 		}
-		Show(root);
+		traverse();
 		return "";
 	}
+    
+ 
+} 
   
-@Override
-public void insert(Movie movie, Comparable k) {
-	Insert(movie);
-	
-}
 
-@Override
-public void delete(Comparable k) {
-	Movie movieToDelete = new Movie(k.toString());
-	Remove(movieToDelete);
-}
+    
 
-@Override
-public Movie search(Comparable k) { //private Node Search(Node x, Movie key)
-	Movie movieToSearch = new Movie(k.toString());
-	 Node node = Search(root,movieToSearch);
-	 if(node != null){
-			for(int i = 0; i < node.n; i++) {
-				if(node.key[i].getTitle().equals(k)) {
-					return node.key[i];
-				}
-			}
-		 }
-	return null;
-}
-
-@Override
-public Movie[] getMovies() {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public void clear() {
-	// TODO Auto-generated method stub
-	
-}
-
-
-}
