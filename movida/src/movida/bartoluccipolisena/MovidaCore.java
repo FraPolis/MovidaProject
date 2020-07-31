@@ -194,68 +194,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 		return allPeople;
 	}
 	
-
-/*
-
-
-	@Override
-	public Movie[] searchMostVotedMovies(Integer N) {
-		Iterator<String> iter = movies.keySet().iterator();	
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			moviesSearched.add(movie);
-		}
-		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getVotes() - movie1.getVotes());
-		if(N <= moviesSearched.size()) {
-			Movie[] searched = new Movie[N];
-			for(int i = 0; i<N; i++) {
-				searched[i] = moviesSearched.get(i); 
-			}
-			return searched;
-		}else {
-			Movie[] searched = new Movie[moviesSearched.size()];
-			for(int i = 0; i<searched.length; i++) {
-				searched[i] = moviesSearched.get(i);
-			}
-			return searched;
-		}
-
-	}
-
-	@Override
-	public Movie[] searchMostRecentMovies(Integer N) {
-		Iterator<String> iter = movies.keySet().iterator();	
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			moviesSearched.add(movie);
-		}
-		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getYear() - movie1.getYear());
-		if(N <= moviesSearched.size()) {
-			Movie[] searched = new Movie[N];
-			for(int i = 0; i<N; i++) {
-				searched[i] = moviesSearched.get(i);
-			}
-			return searched;
-		}else {
-			Movie[] searched = new Movie[moviesSearched.size()];
-			for(int i = 0; i<searched.length; i++) {
-				searched[i] = moviesSearched.get(i); 
-			}
-			return searched;
-		}
-	}
-
-	@Override
-	public Person[] searchMostActiveActors(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-*/	
-	
  //----IMovidaConfig----//
+	
     public boolean setMap(MapImplementation m){
     	if(m==MapImplementation.BTree ){
     		this.movies = new MyBtree();
@@ -357,17 +297,51 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 		}
 		return searched;
 	}
-
+	
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+		for(int i = 0; i < MyallMoviesSorted.length; i++) {
+			Movie movie = MyallMoviesSorted[i];
+			moviesSearched.add(movie);
+		}
+		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getVotes() - movie1.getVotes());
+		if(N <= moviesSearched.size()) {
+			Movie[] searched = new Movie[N];
+			for(int i = 0; i<N; i++) {
+				searched[i] = moviesSearched.get(i); 
+			}
+			return searched;
+		}else {
+			Movie[] searched = new Movie[moviesSearched.size()];
+			for(int i = 0; i<searched.length; i++) {
+				searched[i] = moviesSearched.get(i);
+			}
+			return searched;
+		}
 	}
-
+	
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+		for(int i = 0; i < MyallMoviesSorted.length; i++) {
+			Movie movie = MyallMoviesSorted[i];
+			moviesSearched.add(movie);
+		}
+		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getYear() - movie1.getYear());
+		if(N <= moviesSearched.size()) {
+			Movie[] searched = new Movie[N];
+			for(int i = 0; i<N; i++) {
+				searched[i] = moviesSearched.get(i);
+			}
+			return searched;
+		}else {
+			Movie[] searched = new Movie[moviesSearched.size()];
+			for(int i = 0; i<searched.length; i++) {
+				searched[i] = moviesSearched.get(i); 
+			}
+			return searched;
+		}
 	}
 
 	@Override
