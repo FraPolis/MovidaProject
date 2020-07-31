@@ -9,8 +9,11 @@ import java.io.IOException;
 
 public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 	StrutturaDati movies; //creation of data structure
+	Movie[] MyallMoviesSorted;
+
 	
-// MovidaDB Interface Methods
+ //----IMovidaDB----//
+	
  @Override
 	public void loadFromFile(File f){		
 		try {
@@ -191,79 +194,9 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 		return allPeople;
 	}
 	
-// MovidaSearch Interface Methods
+
 /*
-	@Override
-	public Movie[] searchMoviesByTitle(String title) {
-		Iterator<String> iter = movies.keySet().iterator();
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			if(movie.getTitle().contains(title)) {
-				moviesSearched.add(movie);
-			}	
-		}
-		Movie[] searched = new Movie[moviesSearched.size()];
-		for(int i = 0; i<searched.length; i++) {
-			searched[i] = moviesSearched.get(i);
-		}
-		return searched;
-		
-	}
 
-	@Override
-	public Movie[] searchMoviesInYear(Integer year) {
-		Iterator<String> iter = movies.keySet().iterator();	
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			if(movie.getYear().equals(year)) {
-				moviesSearched.add(movie);
-			}			
-		}
-		Movie[] searched = new Movie[moviesSearched.size()];
-		for(int i = 0; i<searched.length; i++) {
-			searched[i] = moviesSearched.get(i);
-		}
-		return searched;
-	}
-
-	@Override
-	public Movie[] searchMoviesDirectedBy(String name) {
-		Iterator<String> iter = movies.keySet().iterator();	
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			if(movie.getDirector().getName().equals(name)) {
-				moviesSearched.add(movie);
-			}
-		}
-		Movie[] searched = new Movie[moviesSearched.size()];
-		for(int i = 0; i<searched.length; i++) {
-			searched[i] = moviesSearched.get(i);
-		}
-		return searched;
-	}
-
-	@Override
-	public Movie[] searchMoviesStarredBy(String name) {
-		Iterator<String> iter = movies.keySet().iterator();	
-		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		while(iter.hasNext()) {
-			Movie movie = movies.get(iter.next());
-			for(int i = 0; i < movie.getCast().length; i++) {
-				if(movie.getCast()[i].getName().equals(name)) {
-					moviesSearched.add(movie);
-				}
-			}
-		}
-		Movie[] searched = new Movie[moviesSearched.size()];
-		for(int i = 0; i<searched.length; i++) {
-			searched[i] = moviesSearched.get(i);
-		}
-	
-		return searched;
-	}
 
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
@@ -322,46 +255,107 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 	
 */	
 	
-	//Movida Config
+ //----IMovidaConfig----//
     public boolean setMap(MapImplementation m){
     	if(m==MapImplementation.BTree ){
     		this.movies = new MyBtree();
             return true;
         }else if(m==MapImplementation.ListaNonOrdinata){
-             this.movies=new MyLinkedList();
+            this.movies=new MyLinkedList();
             return true;
+        }else {
+        	System.out.println("Implementation not found");
         }
         return false;
         
     }
     
     public boolean setSort(SortingAlgorithm a){
-    	// HeapSort o Bubble Sort
+    	 MyallMoviesSorted = movies.getMovies();
+    	if(a == SortingAlgorithm.BubbleSort ){
+    		BubbleSort bubble = new BubbleSort();
+    		bubble.bubbleSort(MyallMoviesSorted);
+            return true;
+        }else if(a == SortingAlgorithm.HeapSort){
+            HeapSort heap = new HeapSort();
+            heap.sort(MyallMoviesSorted);
+            return true;
+        }
 		return false;
     }
-
+    
+    public Movie[] getMyAllMoviesSorted() {
+    	return MyallMoviesSorted;
+    }
+    
+ //----IMovidaSearch----//
+    
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
+    		Movie movie = MyallMoviesSorted[i];
+    		if(movie.getTitle().contains(title)) {
+    			moviesSearched.add(movie);
+    		}
+    	}
+		Movie[] searched = new Movie[moviesSearched.size()];
+		for(int i = 0; i < searched.length; i++) {
+			searched[i] = moviesSearched.get(i);
+		}
+		return searched;
+	
 	}
 
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
+    		Movie movie = MyallMoviesSorted[i];
+    		if(movie.getYear().equals(year)) {
+    			moviesSearched.add(movie);
+    		}
+    	}
+		Movie[] searched = new Movie[moviesSearched.size()];
+		for(int i = 0; i < searched.length; i++) {
+			searched[i] = moviesSearched.get(i);
+		}
+		return searched;
+		
 	}
 
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
+    		Movie movie = MyallMoviesSorted[i];
+    		if(movie.getDirector().getName().equalsIgnoreCase(name)) {
+    			moviesSearched.add(movie);
+    		}
+    	}
+		Movie[] searched = new Movie[moviesSearched.size()];
+		for(int i = 0; i < searched.length; i++) {
+			searched[i] = moviesSearched.get(i);
+		}
+		return searched;
 	}
 
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
+		for(int i = 0; i < MyallMoviesSorted.length; i++) {
+			Movie movie = MyallMoviesSorted[i];
+			for(int j = 0; j < movie.getCast().length; j++) {
+				if(movie.getCast()[j].getName().equals(name)) {
+					moviesSearched.add(movie);
+				}
+			}
+		}
+		Movie[] searched = new Movie[moviesSearched.size()];
+		for(int i = 0; i < searched.length; i++) {
+			searched[i] = moviesSearched.get(i);
+		}
+		return searched;
 	}
 
 	@Override
@@ -387,4 +381,10 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 	public String toString() {
 		return ((StrutturaDati) movies).toString();
 	}
+	
+//IMovidaCollaborations
+
+
+	
+
 }

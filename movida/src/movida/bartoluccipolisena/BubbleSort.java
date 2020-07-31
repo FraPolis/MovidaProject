@@ -1,21 +1,25 @@
 package movida.bartoluccipolisena;
 
-public class BubbleSort {
+import movida.commons.Movie;
+
+public class BubbleSort   {
 
 	public BubbleSort() {
 		// TODO Auto-generated constructor stub
 	}
-	public static void bubbleSort(Comparable A[]) {
+	
+	public  void bubbleSort(Movie A[]) {
 		for (int i = 1; i < A.length; i++) {
-			boolean swap = false;
+			boolean scambiAvvenuti = false;
 			for (int j = 1; j <= A.length - i; j++)
 				if (A[j - 1].compareTo(A[j]) > 0) {
-					Comparable temp = A[j - 1];
+					Movie temp = A[j - 1];
 					A[j - 1] = A[j];
 					A[j] = temp;
-					swap = true;
+					scambiAvvenuti = true;
 				}
-			if (!swap) break;
+			if (!scambiAvvenuti) break;
 		}
 	}
+	
 }
