@@ -3,15 +3,19 @@ import java.util.*;
 import movida.commons.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import static java.util.stream.Collectors.toMap;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
+public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovidaCollaborations{
 	StrutturaDati movies; //creation of data structure
-	Movie[] MyallMoviesSorted;
+	Movie[] MyallMoviesSorted; //array of movies sorted by the two implemented algorithms (BubbleSort and Heapsort)
 
 	
+
  //----IMovidaDB----//
 	
  @Override
@@ -52,19 +56,19 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 					data = scanner.nextLine();
 					tmp = data.split(":");
 					int votes = Integer.parseInt(tmp[1].trim());
-					
 					if(scanner.hasNextLine()== true) {
 						scanner.nextLine();
 					}
 					Movie movie = new Movie(title,year,votes,cast,director);
+					//Person castMembers = new Person(cast);
 					Movie ris = ((StrutturaDati) movies).search(movie.getTitle());
 					if(ris != null) {
 						((StrutturaDati) movies).delete(movie.getTitle());
 					}
 					((StrutturaDati) movies).insert(movie,movie.getTitle());
 					
-				}
-
+				}	
+			
 				scanner.close();
 			}catch(FileNotFoundException e){
 			      System.out.println("An error occurred.");
@@ -194,6 +198,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 		return allPeople;
 	}
 	
+
  //----IMovidaConfig----//
 	
     public boolean setMap(MapImplementation m){
@@ -346,19 +351,85 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig{
 
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		Person[] allActors = getAllActors();
+		Map <String,Integer> actors = new HashMap<String,Integer>();
+		for(int i = 0; i < allActors.length; i++) {
+			String actorName = allActors[i].getName();
+			Integer count = 1;
+			if(actors.containsKey(actorName)) {
+				count = actors.get(actorName);
+				count++;
+			}
+			actors.put(actorName, count);
+		}
+		 Map<String, Integer>  sorted = actors //sorting hashMap by value(decreasing order)
+		            .entrySet()
+		            .stream()
+		            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+		            .collect(
+		                toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+		                    LinkedHashMap::new));
+		 
+			Person[] mostActiveActors = null;
+			if(N <= sorted.size()) {
+				mostActiveActors = new Person[N];
+			}else {
+				mostActiveActors = new Person[sorted.size()];
+			}
+			
+			int i = 0;
+			Iterator<String> tmpIter = sorted.keySet().iterator();	
+			while(i < N && tmpIter.hasNext()) {
+				String name = tmpIter.next();
+				Person p = new Person(name);
+				mostActiveActors[i] = p;
+				i++;	
+			}
+			return mostActiveActors;		
 	}
-
+	
+	public Person[] getAllActors() {//return array of all actors (with duplicates)
+		ArrayList<Person> actors = new ArrayList<Person>();
+		Movie[] moviesReturned = movies.getMovies();
+		for(int i = 0;i < moviesReturned.length; i++) {
+			Movie movie = moviesReturned[i];
+			for(int j = 0; j < movie.getCast().length; j++) {
+				actors.add(movie.getCast()[j]);
+			}
+		}
+		
+		Person[] allActors = new Person[actors.size()];
+		for(int i = 0; i < allActors.length; i++) {
+			allActors[i] = actors.get(i);
+		}
+		
+		return allActors;
+	}
 
 	@Override
 	public String toString() {
 		return ((StrutturaDati) movies).toString();
 	}
 	
-//IMovidaCollaborations
+	 //----IMovidaCollaboration---//
+	
+	@Override
+	public Person[] getDirectCollaboratorsOf(Person actor) {
+        return null;
+	}
 
+    
+	@Override
+	public Person[] getTeamOf(Person actor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public Collaboration[] maximizeCollaborationsInTheTeamOf(Person actor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

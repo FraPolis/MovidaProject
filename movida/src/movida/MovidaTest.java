@@ -6,21 +6,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import movida.bartoluccipolisena.MovidaCore;
-
+import movida.bartoluccipolisena.MyGraph;
 import movida.commons.*;
 public class MovidaTest {
 	
 	public static void main(String [] args) {
 		MovidaCore movida = new MovidaCore();
-		movida.setMap(MapImplementation.ListaNonOrdinata);
-		//movida.setMap(MapImplementation.BTree);
-		//movida.loadFromFile(new File("testoalbero.txt"));
-		movida.loadFromFile(new File("esempio-formato-dati.txt"));
+		//movida.setMap(MapImplementation.ListaNonOrdinata);
+		movida.setMap(MapImplementation.BTree);
+		movida.loadFromFile(new File("esempio-formato-datitxt"));
 		//movida.setSort(SortingAlgorithm.BubbleSort);
 		movida.setSort(SortingAlgorithm.HeapSort);	
 		System.out.println(movida.toString());
-		System.out.println(Arrays.toString(movida.getMyAllMoviesSorted()));
-		System.out.println(" ");
+		//System.out.println(Arrays.toString(movida.getMyAllMoviesSorted()));
+		//System.out.println(" ");
 		//System.out.println(movida.toString());	
 		//---Testing IMovidaDB methods---//
 		
@@ -47,8 +46,10 @@ public class MovidaTest {
 		//System.out.println(Arrays.toString(movida.searchMoviesInYear(1997)));
 		//System.out.println(Arrays.toString(movida.searchMoviesDirectedBy("Martin Scorsese")));
 		//System.out.println(Arrays.toString(movida.searchMoviesStarredBy("Harrison Ford")));
-		System.out.println(Arrays.toString(movida.searchMostVotedMovies(2)));
-		System.out.println(Arrays.toString(movida.searchMostRecentMovies(4)));
-
+		//System.out.println(Arrays.toString(movida.searchMostVotedMovies(2)));
+		//System.out.println(Arrays.toString(movida.searchMostRecentMovies(4)));
+		System.out.println(Arrays.toString(movida.searchMostActiveActors(3)));
+		
+		//---Testing IMovidaCollaborations methods---//
 	}
 }
