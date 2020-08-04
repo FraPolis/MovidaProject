@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import movida.bartoluccipolisena.MovidaCore;
-import movida.bartoluccipolisena.MyGraph;
+//import movida.bartoluccipolisena.MyGraph;
 import movida.commons.*;
 public class MovidaTest {
 	
@@ -14,7 +14,7 @@ public class MovidaTest {
 		MovidaCore movida = new MovidaCore();
 		//movida.setMap(MapImplementation.ListaNonOrdinata);
 		movida.setMap(MapImplementation.BTree);
-		movida.loadFromFile(new File("esempio-formato-datitxt"));
+		movida.loadFromFile(new File("esempio-formato-dati.txt"));
 		//movida.setSort(SortingAlgorithm.BubbleSort);
 		movida.setSort(SortingAlgorithm.HeapSort);	
 		System.out.println(movida.toString());

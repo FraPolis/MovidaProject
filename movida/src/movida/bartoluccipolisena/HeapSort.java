@@ -2,7 +2,7 @@ package movida.bartoluccipolisena;
 
 import movida.commons.Movie;
 
-public class HeapSort {
+public class HeapSort extends Sort {
     
 	public HeapSort() {
 		

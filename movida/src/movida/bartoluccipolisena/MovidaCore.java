@@ -11,11 +11,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovidaCollaborations{
-	StrutturaDati movies; //creation of data structure
+	StrutturaDati movies = new MyBtree() ; //creation of data structure
 	Movie[] MyallMoviesSorted; //array of movies sorted by the two implemented algorithms (BubbleSort and Heapsort)
 
+	Sort s = new BubbleSort(); // Sorting algorithm
 	
-
  //----IMovidaDB----//
 	
  @Override
@@ -202,10 +202,10 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
  //----IMovidaConfig----//
 	
     public boolean setMap(MapImplementation m){
-    	if(m==MapImplementation.BTree ){
+    	if(m==MapImplementation.BTree && this.movies instanceof MyLinkedList ){
     		this.movies = new MyBtree();
             return true;
-        }else if(m==MapImplementation.ListaNonOrdinata){
+        }else if(m==MapImplementation.ListaNonOrdinata && this.movies instanceof MyBtree ){
             this.movies=new MyLinkedList();
             return true;
         }else {
@@ -216,16 +216,16 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
     }
     
     public boolean setSort(SortingAlgorithm a){
-    	 MyallMoviesSorted = movies.getMovies();
-    	if(a == SortingAlgorithm.BubbleSort ){
-    		BubbleSort bubble = new BubbleSort();
-    		bubble.bubbleSort(MyallMoviesSorted);
+    	MyallMoviesSorted = movies.getMovies(); 
+    	if (a == SortingAlgorithm.BubbleSort) {
+    		this.s = new BubbleSort();
+    		s.sort(MyallMoviesSorted);
+    		return true;
+    	}else if(a == SortingAlgorithm.HeapSort){
+    		s = new HeapSort();
+            s.sort(MyallMoviesSorted);
             return true;
-        }else if(a == SortingAlgorithm.HeapSort){
-            HeapSort heap = new HeapSort();
-            heap.sort(MyallMoviesSorted);
-            return true;
-        }
+    	}
 		return false;
     }
     
