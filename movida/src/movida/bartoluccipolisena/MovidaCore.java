@@ -12,8 +12,8 @@ import java.io.IOException;
 
 public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovidaCollaborations{
 	StrutturaDati movies; //creation of data structure
-	Movie[] MyallMoviesSorted; //array of movies sorted by the two implemented algorithms (BubbleSort and Heapsort)
-
+	Movie[] myAllMoviesSorted; //array of movies sorted by the two implemented algorithms (BubbleSort / Heapsort)
+	MyGraph graph; //creation of a graph
 	
 
  //----IMovidaDB----//
@@ -24,24 +24,36 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 			String[] tmp = null;
 			Scanner scanner = new Scanner(f);
 				while(scanner.hasNextLine()) {
-					String data = scanner.nextLine();				
+					String data = scanner.nextLine();
+					if(!Utils.checkData(data, "Title", 2, ":")) {
+						throw new MovidaFileException();
+					}
 					tmp = data.split(":");
 					String title = tmp[1].trim();
 					
 					data = scanner.nextLine();
+					if(!Utils.checkData(data, "Year", 2, ":")) {
+						throw new MovidaFileException();
+					}
 					tmp = data.split(":");
 					int year = Integer.parseInt(tmp[1].trim());
 					
-					data = scanner.nextLine();	
+					data = scanner.nextLine();
+					if(!Utils.checkData(data, "Director", 2, ":")) {
+						throw new MovidaFileException();
+					}
 					tmp = data.split(":");
 					String directorName = tmp[1].trim();
 					Person director = new Person(directorName);
 					
 					data = scanner.nextLine();
+					if(!Utils.checkData(data, "Cast", 2, ":")) {
+						throw new MovidaFileException();
+					}
 					tmp = data.split(":");
 					String[] tmp1 = tmp[1].split(",");
 	
-					HashSet <String> unico = new HashSet<String>();//gestire gli elementi del cast(no duplicati)
+					HashSet <String> unico = new HashSet<String>(); //handle cast duplicates
 					for(int i=0; i<tmp1.length; i++) {
 						unico.add(tmp1[i].trim());							
 					}
@@ -54,13 +66,16 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 				     }			        	
 					
 					data = scanner.nextLine();
+					if(!Utils.checkData(data, "Votes", 2, ":")) {
+						throw new MovidaFileException();
+					}
 					tmp = data.split(":");
 					int votes = Integer.parseInt(tmp[1].trim());
 					if(scanner.hasNextLine()== true) {
 						scanner.nextLine();
 					}
 					Movie movie = new Movie(title,year,votes,cast,director);
-					//Person castMembers = new Person(cast);
+					graph.movieCollaborations(movie); //loading graph
 					Movie ris = ((StrutturaDati) movies).search(movie.getTitle());
 					if(ris != null) {
 						((StrutturaDati) movies).delete(movie.getTitle());
@@ -68,12 +83,11 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 					((StrutturaDati) movies).insert(movie,movie.getTitle());
 					
 				}	
-			
 				scanner.close();
 			}catch(FileNotFoundException e){
 			      System.out.println("An error occurred.");
 			}catch(MovidaFileException m){
-				  m.getMessage();
+				  System.out.println(m.getMessage());
 			}
 		}
 	
@@ -202,6 +216,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
  //----IMovidaConfig----//
 	
     public boolean setMap(MapImplementation m){
+    	graph = new MyGraph();
     	if(m==MapImplementation.BTree ){
     		this.movies = new MyBtree();
             return true;
@@ -216,21 +231,21 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
     }
     
     public boolean setSort(SortingAlgorithm a){
-    	 MyallMoviesSorted = movies.getMovies();
+    	 myAllMoviesSorted = movies.getMovies();
     	if(a == SortingAlgorithm.BubbleSort ){
     		BubbleSort bubble = new BubbleSort();
-    		bubble.bubbleSort(MyallMoviesSorted);
+    		bubble.bubbleSort(myAllMoviesSorted);
             return true;
         }else if(a == SortingAlgorithm.HeapSort){
             HeapSort heap = new HeapSort();
-            heap.sort(MyallMoviesSorted);
+            heap.sort(myAllMoviesSorted);
             return true;
         }
 		return false;
     }
     
     public Movie[] getMyAllMoviesSorted() {
-    	return MyallMoviesSorted;
+    	return myAllMoviesSorted;
     }
     
  //----IMovidaSearch----//
@@ -238,9 +253,9 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
-    		Movie movie = MyallMoviesSorted[i];
-    		if(movie.getTitle().contains(title)) {
+    	for(int i = 0; i < myAllMoviesSorted.length; i++) {
+    		Movie movie = myAllMoviesSorted[i];
+    		if(movie.getTitle().toLowerCase().contains(title.toLowerCase())) {
     			moviesSearched.add(movie);
     		}
     	}
@@ -255,8 +270,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
-    		Movie movie = MyallMoviesSorted[i];
+    	for(int i = 0; i < myAllMoviesSorted.length; i++) {
+    		Movie movie = myAllMoviesSorted[i];
     		if(movie.getYear().equals(year)) {
     			moviesSearched.add(movie);
     		}
@@ -272,8 +287,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-    	for(int i = 0; i < MyallMoviesSorted.length; i++) {
-    		Movie movie = MyallMoviesSorted[i];
+    	for(int i = 0; i < myAllMoviesSorted.length; i++) {
+    		Movie movie = myAllMoviesSorted[i];
     		if(movie.getDirector().getName().equalsIgnoreCase(name)) {
     			moviesSearched.add(movie);
     		}
@@ -288,8 +303,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		for(int i = 0; i < MyallMoviesSorted.length; i++) {
-			Movie movie = MyallMoviesSorted[i];
+		for(int i = 0; i < myAllMoviesSorted.length; i++) {
+			Movie movie = myAllMoviesSorted[i];
 			for(int j = 0; j < movie.getCast().length; j++) {
 				if(movie.getCast()[j].getName().equals(name)) {
 					moviesSearched.add(movie);
@@ -306,8 +321,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		for(int i = 0; i < MyallMoviesSorted.length; i++) {
-			Movie movie = MyallMoviesSorted[i];
+		for(int i = 0; i < myAllMoviesSorted.length; i++) {
+			Movie movie = myAllMoviesSorted[i];
 			moviesSearched.add(movie);
 		}
 		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getVotes() - movie1.getVotes());
@@ -329,8 +344,8 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
-		for(int i = 0; i < MyallMoviesSorted.length; i++) {
-			Movie movie = MyallMoviesSorted[i];
+		for(int i = 0; i < myAllMoviesSorted.length; i++) {
+			Movie movie = myAllMoviesSorted[i];
 			moviesSearched.add(movie);
 		}
 		Collections.sort(moviesSearched,(movie1,movie2)->movie2.getYear() - movie1.getYear());
@@ -388,7 +403,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 			return mostActiveActors;		
 	}
 	
-	public Person[] getAllActors() {//return array of all actors (with duplicates)
+	public Person[] getAllActors() {  //return array of all actors (with duplicates)
 		ArrayList<Person> actors = new ArrayList<Person>();
 		Movie[] moviesReturned = movies.getMovies();
 		for(int i = 0;i < moviesReturned.length; i++) {
@@ -415,20 +430,19 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	
 	@Override
 	public Person[] getDirectCollaboratorsOf(Person actor) {
-        return null;
+		return graph.getDirectCollaborators(actor);
 	}
 
     
 	@Override
 	public Person[] getTeamOf(Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		 return graph.getTeam(actor);
+		
 	}
 
 	@Override
 	public Collaboration[] maximizeCollaborationsInTheTeamOf(Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		return graph.maximizeCollaborationsInTheTeam(actor);
 	}
 	
 
