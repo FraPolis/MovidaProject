@@ -14,6 +14,10 @@ public class Collaboration {
 		this.movies = new ArrayList<Movie>();
 	}
 
+	public void addMovie(Movie m){
+		this.movies.add(m);
+	}
+
 	public Person getActorA() {
 		return actorA;
 	}
@@ -32,4 +36,8 @@ public class Collaboration {
 		return score / movies.size();
 	}
 	
+	@Override
+	public String toString() {
+		return actorA.getName() + " + " + actorB.getName() + " ==> Total score :"+ getScore()+"\n";
+	}
 }
