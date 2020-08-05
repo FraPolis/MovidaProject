@@ -1,0 +1,119 @@
+Title: Cape Fear	
+Year: 1991
+Director: Martin Scorsese
+Cast: Robert De Niro, Nick Nolte, Jessica Lange, Juliette Lewis
+Votes: 163093
+
+Title: Indiana Jones and the Temple of Doom 	
+Year: 1991
+Director: Martin Scorsese
+Cast: Robert De Niro, Nick Nolte, Jessica Lange, Juliette Lewis
+Votes: 163093
+
+Title: Taxi Driver
+Year: 1976
+Director: Martin Scorsese
+Cast: Robert De Niro, Jodie Foster, Cybill Shepherd, Albert Brooks
+Votes: 684728
+
+Title: The Sixth Sense 	
+Year: 1985
+Director: Robert Zemeckis
+Cast: Michael J. Fox, Christopher Lloyd
+Votes:	1925668
+
+Title: Raiders of the Lost Ark
+Year: 1981
+Director: Steven Spielberg
+Cast:  Harrison Ford, Karen Allen, Paul Freeman
+Votes: 6854728
+
+Title: Pulp Fiction
+Year: 1994
+Director: Quentin Tarantino
+Cast: John Travolta, Uma Thurman
+Votes:	1743616
+
+Title: Back to the Future
+Year: 2010
+Director: Christopher Nolan
+Cast:  Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page
+Votes: 1204728
+
+Title : Who Framed Roger Rabbit
+Year: 1997 
+Director: Robert Zemeckis 	
+Cast: Bob Hoskins, Christopher Lloyd, Joanna Cassidy
+Votes: 244372	
+
+Title: Die Hard	
+Year: 1983
+Director: Brian De Palma
+Cast: Bruce Willis, Alan Rickman, Bonnie Bedelia
+Votes: 703754
+
+Title: What Lies Beneath	
+Year: 1983  
+Director: Brian De Palma  	
+Cast: Al Pacino, Michelle Pfeiffer, Steven Bauer
+Votes: 703754 	
+
+Title: The Sixth Sense 	
+Year: 1999  
+Director: M. Night Shyamalan  	
+Cast: Bruce Willis, Haley Joel Osment, Toni Collette 
+Votes: 879298 	
+
+Title: Scarface 	
+Year: 1983  
+Director: Brian De Palma  	
+Cast: Al Pacino, Michelle Pfeiffer, Steven Bauer
+Votes: 703754		
+
+Title: What Lies Beneath 	
+Year: 2000  
+Director: Robert Zemeckis  	
+Cast:  Harrison Ford, Michelle Pfeiffer, Katharine Towne 
+Votes: 114295
+
+Title: Star Wars Episode IV 	
+Year: 1977
+Director: George Lucas 	
+Cast:  Harrison Ford, Mark Hamill, Carrie Fisher
+Votes: 15014295 	
+
+Title: Back to the Future
+Year: 1985
+Director: Robert Zemeckis
+Cast: Michael J. Fox, Christopher Lloyd
+Votes:	1925668
+
+Title: Indiana Jones and the Temple of Doom 	
+Year: 1984
+Director: Steven Spielberg  	
+Cast:  Harrison Ford, Kate Capshaw, Jonathan Ke Quan 
+Votes: 1156299 	
+	
+Title: Air Force One 	
+Year: 1997  
+Director: Wolfgang Petersen  	
+Cast: Harrison Ford, Gary Oldman, Glenn Close 
+Votes: 173540 	
+
+Title: Star Wars Episode V 	
+Year: 1980
+Director:  Irvin Kershner  	
+Cast:  Harrison Ford, Mark Hamill, Carrie Fisher
+Votes: 13201495 
+
+Title: Die Hard	
+Year: 1988
+Director: John McTiernan
+Cast: Bruce Willis, Alan Rickman, Bonnie Bedelia
+Votes: 755228
+
+Title: The Fugitive  	
+Year: 1993  
+Director: Andrew Davis  	
+Cast: Harrison Ford, Tommy Lee Jones, Sela Ward 
+Votes: 256213
