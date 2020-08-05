@@ -1,8 +1,9 @@
+  
 package movida.bartoluccipolisena;
 
 import movida.commons.Movie;
 
-public class BubbleSort   {
+public class BubbleSort extends Sort{
 
 	public BubbleSort() {
 		// TODO Auto-generated constructor stub
@@ -20,6 +21,12 @@ public class BubbleSort   {
 				}
 			if (!scambiAvvenuti) break;
 		}
+	}
+
+	@Override
+	public void sort(Movie[] arr) {
+		this.bubbleSort(arr);
+		
 	}
 	
 }
