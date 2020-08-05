@@ -38,12 +38,4 @@ public class Person {
 		return this.name;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		return equals((Person)obj);
-	}
-	
-	/*public boolean equals(Person person) {
-		return this.name.equalsIgnoreCase(person.name);
-	}*/
 }
