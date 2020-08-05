@@ -126,22 +126,50 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		}
 		
 	}
-
+	
+	
 	@Override
 	public void clear() {
 		 ((StrutturaDati) movies).clear();
 	}
-
+	
+	// Ok
 	@Override
 	public int countMovies() {
 		return((StrutturaDati) movies).getMovies().length;
 	}
 
+	// Ok
 	@Override
 	public int countPeople() {
 		return this.getAllPeople().length;
 	}
 
+	
+	// Capitalizza le prime lettere che seguono uno spazio
+	// Es.  blade runner -> Blade Runner
+	private static String capitalize(String title){
+		Scanner in = new Scanner(title);
+		String line = in.nextLine();
+		String upper_case_line = ""; 
+		Scanner lineScan = new Scanner(line); 
+		while(lineScan.hasNext()) {
+			String word = lineScan.next(); 
+			upper_case_line += Character.toUpperCase(word.charAt(0)) + word.substring(1) + " "; 
+		}
+		in.close();
+		lineScan.close();
+		
+		return (upper_case_line.trim()); 
+	}
+
+	// Cancella film da Movies, ma non da AllMySortedMovies
+	// SOLUZIONE: funzione che aggiorna AllMySortedMovies
+	
+	// Errore se si usa il nome di un film scritto in minuscolo, riga 157 Movida Core
+	// Riga 49 di MyLinkedList, remove non funziona se si cerca di eliminare qualcosa che non c'è
+	// SOLUZIONE: Capitalize first letter of every word
+	
 	@Override
 	public boolean deleteMovieByTitle(String title) {
 		Movie[] allMovies = movies.getMovies();
@@ -149,13 +177,14 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 			Movie movie = allMovies[i];
 			if(movie.getTitle().equalsIgnoreCase(title)) {
 				System.out.println("I am deleting the movie : "+allMovies[i]);
-				movies.delete(title);
+				movies.delete(capitalize(title));
 				return true;
 			}
 		}
 		return false;
 	}
 	
+	// Ok
 	@Override
 	public Movie getMovieByTitle(String title) {
 		Movie[] moviesReturned = movies.getMovies();
@@ -168,6 +197,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return null;
 	}
 
+	// Ok
 	@Override
 	public Person getPersonByName(String name) {
 		Movie[] moviesReturned = movies.getMovies();
@@ -184,13 +214,15 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		}
 		return null;
 	}
-
+	
+	// Ok
 	@Override
 	public Movie[] getAllMovies() {
 		Movie[] moviesReturned = movies.getMovies();
 		return moviesReturned;		
 	}
 
+	// Ok
 	@Override
 	public Person[] getAllPeople() {
 		HashSet<String> people = new HashSet<String>();
@@ -215,12 +247,13 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 
  //----IMovidaConfig----//
 	
+	// Ok
     public boolean setMap(MapImplementation m){
     	graph = new MyGraph(); 
-    	if(m==MapImplementation.BTree && this.movies instanceof MyLinkedList ){
+    	if(m==MapImplementation.BTree){
     		this.movies = new MyBtree();
             return true;
-        }else if(m==MapImplementation.ListaNonOrdinata && this.movies instanceof MyBtree){
+        }else if(m==MapImplementation.ListaNonOrdinata){
             this.movies=new MyLinkedList();
             return true;
         }else {
@@ -230,25 +263,37 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
         
     }
     
+    // Ok
     public boolean setSort(SortingAlgorithm a){
-    	 myAllMoviesSorted = movies.getMovies();
     	if(a == SortingAlgorithm.BubbleSort ){
     		s = new BubbleSort();
-    		s.sort(myAllMoviesSorted);
+    		updateMyAllMoviesSorted();
             return true;
         }else if(a == SortingAlgorithm.HeapSort){
     		s = new HeapSort();
-    		s.sort(myAllMoviesSorted);
+    		updateMyAllMoviesSorted();
             return true;
         }
 		return false;
     }
     
+    // Ok
     public Movie[] getMyAllMoviesSorted() {
     	return myAllMoviesSorted;
     }
     
+    private void updateMyAllMoviesSorted(){
+    	this.myAllMoviesSorted = movies.getMovies();
+    	this.s.sort(this.myAllMoviesSorted);
+  
+    }
+    
  //----IMovidaSearch----//
+    
+    // Trova il film anche se eliminato, myAllMoviesSorted non viene aggiornato quando si eliminano film
+    // SOLUZIONE: aggiornata myAllMoviesSorted quando si elimina un elemento
+    
+    // Trova il film a partire da una sottostringa, quale specifica adottare?
     
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
@@ -266,6 +311,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return searched;
 	}
 
+	// Ok
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
@@ -282,6 +328,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return searched;
 	}
 
+	// Ok
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
@@ -298,13 +345,14 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return searched;
 	}
 
+	// Ricerca case sensi
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
 		for(int i = 0; i < myAllMoviesSorted.length; i++) {
 			Movie movie = myAllMoviesSorted[i];
 			for(int j = 0; j < movie.getCast().length; j++) {
-				if(movie.getCast()[j].getName().equals(name)) {
+				if(movie.getCast()[j].getName().equalsIgnoreCase(name)) {
 					moviesSearched.add(movie);
 				}
 			}
@@ -316,6 +364,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return searched;
 	}
 	
+	// Ok
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
@@ -339,6 +388,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		}
 	}
 	
+	// Ok
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
 		ArrayList<Movie> moviesSearched = new ArrayList<Movie>();
@@ -362,6 +412,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		}
 	}
 
+	// Ok
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
 		Person[] allActors = getAllActors();
@@ -401,6 +452,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 			return mostActiveActors;		
 	}
 	
+	// Ok
 	public Person[] getAllActors() {  //return array of all actors (with duplicates)
 		ArrayList<Person> actors = new ArrayList<Person>();
 		Movie[] moviesReturned = movies.getMovies();
@@ -419,6 +471,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		return allActors;
 	}
 
+	// Ok
 	@Override
 	public String toString() {
 		return ((StrutturaDati) movies).toString();

@@ -403,7 +403,6 @@ public class MyBtree extends StrutturaDati{
 	@Override
 	public void insert(Movie movie, Comparable k) {
 		insert(movie);
-		
 	}
 
 	@Override

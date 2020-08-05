@@ -12,9 +12,14 @@ public class MovidaTest {
 		movida.setMap(MapImplementation.ListaNonOrdinata);
 		//movida.setMap(MapImplementation.BTree);
 		movida.loadFromFile(new File("esempio-formato-dati.txt"));
+		movida.setSort(SortingAlgorithm.HeapSort);
 		movida.setSort(SortingAlgorithm.BubbleSort);
+		System.out.println(movida.countMovies());
+		System.out.println(movida.countPeople());
+		System.out.println(Arrays.toString(movida.searchMoviesStarredBy("harrison Ford")));
+		
+		
 		//movida.setSort(SortingAlgorithm.HeapSort);	
-		System.out.println(movida.toString());	
 		//System.out.println(Arrays.toString(movida.getMyAllMoviesSorted())); //sort by BubbleSort or Heapsort
 		//System.out.println(" ");
 		//System.out.println(movida.toString());
