@@ -1,7 +1,6 @@
 package movida.bartoluccipolisena;
 import movida.commons.Movie;
 
-
 public class MyBtree extends StrutturaDati{ 
     public BTreeNode root; // Pointer to root node 
     public int t; // Minimum degree 
@@ -10,7 +9,7 @@ public class MyBtree extends StrutturaDati{
     // Constructor (Initializes tree as empty) 
     MyBtree() { 
         this.root = null; 
-        this.t = 3; 
+        this.t = 3; //the degree of BTree will always be 3 
     } 
   
     // function to traverse the tree 
@@ -85,7 +84,7 @@ public class MyBtree extends StrutturaDati{
             this.n = 0; 
         }
         
-        public int findKey(Movie k) {//penso il problema sia qui
+        public int findKey(Movie k) {
         	int idx = 0;
         	while (idx<n && keys[idx].compareTo(k) < 0)        	
               ++idx; 
