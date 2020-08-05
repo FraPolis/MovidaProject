@@ -217,14 +217,15 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	
     public boolean setMap(MapImplementation m){
     	graph = new MyGraph(); 
-    	if(m==MapImplementation.BTree && this.movies instanceof MyLinkedList ){
+    	if(m==MapImplementation.BTree && this.movies instanceof MyBtree ){
     		this.movies = new MyBtree();
             return true;
         }else if(m==MapImplementation.ListaNonOrdinata && this.movies instanceof MyBtree){
             this.movies=new MyLinkedList();
             return true;
         }else {
-        	System.out.println("Implementation not found");
+        	System.out.println("Data Structure not found!");
+        	System.out.println("Loading default Data Structure : BTree");
         }
         return false;
         
@@ -232,14 +233,17 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
     
     public boolean setSort(SortingAlgorithm a){
     	 myAllMoviesSorted = movies.getMovies();
-    	if(a == SortingAlgorithm.BubbleSort ){
+    	if(a == SortingAlgorithm.BubbleSort && this.s instanceof BubbleSort ){
     		s = new BubbleSort();
     		s.sort(myAllMoviesSorted);
             return true;
-        }else if(a == SortingAlgorithm.HeapSort){
+        }else if(a == SortingAlgorithm.HeapSort && this.s instanceof BubbleSort){
     		s = new HeapSort();
     		s.sort(myAllMoviesSorted);
             return true;
+        }else {
+        	System.out.println("Sorting Algorithm not found!");
+        	System.out.println("Loading default Sorting Algorithm : BubbleSort");
         }
 		return false;
     }
