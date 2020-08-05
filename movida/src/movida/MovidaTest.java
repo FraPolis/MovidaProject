@@ -77,21 +77,19 @@ public class MovidaTest {
 		//System.out.println(Arrays.toString(movida.searchMostActiveActors(6)));
 		
 		//---Testing IMovidaCollaborations methods---//
-		Person p1 = new Person("Robert De Niro");
-		Person p2 = new Person("Juliette Lewis");
-		Person p3 = new Person("John Travolta");
+		//Person p1 = new Person("Robert De Niro");
+		//Person p2 = new Person("Juliette Lewis");
+		//Person p3 = new Person("John Travolta");
 		//Person[] ris = movida.getDirectCollaboratorsOf(p2);
 		//Person[] ris = movida.getTeamOf(p2);
-		Collaboration[] ris = movida.maximizeCollaborationsInTheTeamOf(p1);
-		if(ris!=null) {
+		//Collaboration[] ris = movida.maximizeCollaborationsInTheTeamOf(p1);
+		/*if(ris!=null) {
 			for(int i = 0; i < ris.length; i++) {
 				System.out.println(ris[i]);
 			}
 		}else {
 			System.out.println("Actor not found");
-		}
+		}*/
 
-
-	
 	}
 }
