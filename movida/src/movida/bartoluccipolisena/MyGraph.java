@@ -27,6 +27,7 @@ import java.util.*;
 		            collaborators[i] = c.getActorB();
 		            i++;
 		        }
+		        System.out.println("Direct collaborators of "+actor.getName()+" are :");
 		        return collaborators;
 	       } 
 	       return null;
@@ -59,6 +60,7 @@ import java.util.*;
 	        for(int i = 0; i < actorTeam.length; i++) {
 	        	actorTeam[i] = team.get(i);
 			}
+	        System.out.println("Team of "+actor.getName()+" consist of :");
 	        return actorTeam;
 	    }
 
@@ -94,6 +96,8 @@ import java.util.*;
 	        for(int i = 0; i < collaborationsInTeam.length; i++) {
 	        	collaborationsInTeam[i] = collabs.get(i);
 			}
+	        System.out.println("Maximum Collaboration in the team of "+actor.getName()+" consist of :");
+	        System.out.println(" ");
 	        return collaborationsInTeam;
 
 	    }
