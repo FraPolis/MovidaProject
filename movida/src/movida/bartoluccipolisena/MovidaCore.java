@@ -23,6 +23,10 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 		try {
 			String[] tmp = null;
 			Scanner scanner = new Scanner(f);
+			if (f.length() == 0) { 
+				System.out.println(" File vuoto"); 
+				return;
+				}
 				while(scanner.hasNextLine()) {
 					String data = scanner.nextLine();
 					if(!Utils.checkData(data, "Title", 2, ":")) {

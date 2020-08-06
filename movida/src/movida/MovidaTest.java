@@ -20,9 +20,9 @@ public class MovidaTest {
 		
 		
 		
-		System.out.println(movida.countMovies());
-		System.out.println(movida.countPeople());
-		System.out.println(Arrays.toString(movida.searchMoviesStarredBy("Harrison Ford")));
+		System.out.println(movida.toString());
+
+	
 		
 		
 		//movida.setSort(SortingAlgorithm.HeapSort);	
