@@ -9,14 +9,20 @@ public class MovidaTest {
 	
 	public static void main(String [] args) {
 		MovidaCore movida = new MovidaCore();
-		movida.setMap(MapImplementation.ListaNonOrdinata);
+		movida.setMap(MapImplementation.BTree);
 		//movida.setMap(MapImplementation.BTree);
-		movida.loadFromFile(new File("esempio-formato-dati.txt"));
+		
 		movida.setSort(SortingAlgorithm.HeapSort);
 		movida.setSort(SortingAlgorithm.BubbleSort);
+		
+	
+		movida.loadFromFile(new File("esempio-formato-dati.txt"));
+		
+		
+		
 		System.out.println(movida.countMovies());
 		System.out.println(movida.countPeople());
-		System.out.println(Arrays.toString(movida.searchMoviesStarredBy("harrison Ford")));
+		System.out.println(Arrays.toString(movida.searchMoviesStarredBy("Harrison Ford")));
 		
 		
 		//movida.setSort(SortingAlgorithm.HeapSort);	

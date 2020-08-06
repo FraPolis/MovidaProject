@@ -83,7 +83,9 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 					((StrutturaDati) movies).insert(movie,movie.getTitle());
 					
 				}	
+				updateMyAllMoviesSorted();
 				scanner.close();
+				
 			}catch(FileNotFoundException e){
 			      System.out.println("An error occurred.");
 			}catch(MovidaFileException m){
@@ -267,11 +269,9 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
     public boolean setSort(SortingAlgorithm a){
     	if(a == SortingAlgorithm.BubbleSort ){
     		s = new BubbleSort();
-    		updateMyAllMoviesSorted();
             return true;
         }else if(a == SortingAlgorithm.HeapSort){
     		s = new HeapSort();
-    		updateMyAllMoviesSorted();
             return true;
         }
 		return false;
