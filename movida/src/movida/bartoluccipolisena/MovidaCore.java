@@ -15,12 +15,14 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 	Movie[] myAllMoviesSorted; //array of movies sorted by the two implemented algorithms (BubbleSort / Heapsort)
 	MyGraph graph; //creation of a graph
 	Sort s = new BubbleSort(); ////creation of  default sorting algorithm
+	String loadedFile = "";
 
  //----IMovidaDB----//
 	
  @Override
 	public void loadFromFile(File f){		
 		try {
+			loadedFile = f.getName();
 			String[] tmp = null;
 			Scanner scanner = new Scanner(f);
 			if (f.length() == 0) { 
@@ -91,7 +93,7 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
 				scanner.close();
 				
 			}catch(FileNotFoundException e){
-			      System.out.println("An error occurred.");
+			      System.out.println("An error occurred, file not found");
 			}catch(MovidaFileException m){
 				  System.out.println(m.getMessage());
 			}
@@ -258,9 +260,15 @@ public class MovidaCore implements IMovidaDB, IMovidaSearch,IMovidaConfig,IMovid
     	graph = new MyGraph(); 
     	if(m==MapImplementation.BTree){
     		this.movies = new MyBtree();
-            return true;
+    		if (loadedFile != "") {
+    			this.loadFromFile(new File(loadedFile));
+    		}
+    		return true;
         }else if(m==MapImplementation.ListaNonOrdinata){
             this.movies=new MyLinkedList();
+            if (loadedFile != "") {
+    			this.loadFromFile(new File(loadedFile));
+    		}
             return true;
         }else {
         	System.out.println("Implementation not found");

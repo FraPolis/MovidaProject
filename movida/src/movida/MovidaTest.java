@@ -9,7 +9,7 @@ public class MovidaTest {
 	
 	public static void main(String [] args) {
 		MovidaCore movida = new MovidaCore();
-		movida.setMap(MapImplementation.BTree);
+		movida.setMap(MapImplementation.ListaNonOrdinata);
 		//movida.setMap(MapImplementation.BTree);
 		
 		movida.setSort(SortingAlgorithm.HeapSort);
@@ -81,7 +81,7 @@ public class MovidaTest {
 		
 		//System.out.println(Arrays.toString(movida.searchMoviesByTitle("star wars")));
 		//System.out.println(Arrays.toString(movida.searchMoviesInYear(1997)));
-		//System.out.println(Arrays.toString(movida.searchMoviesDirectedBy("Steven Spielberg")));
+		// System.out.println(Arrays.toString(movida.searchMoviesDirectedBy("Steven Spielberg")));
 		//System.out.println(Arrays.toString(movida.searchMoviesStarredBy("Harrison Ford")));
 		//System.out.println(Arrays.toString(movida.searchMostVotedMovies(50)));
 		//System.out.println(Arrays.toString(movida.searchMostRecentMovies(4)));

@@ -6,18 +6,20 @@ import java.util.HashSet;
 import movida.commons.Collaboration;
 import movida.commons.Movie;
 import movida.commons.Person;
-
 import java.util.*;
 
 
 	public class MyGraph {
 		
+		// Data structure for items
 	    private HashMap<String, ArrayList<Collaboration>> graph;
 
+	    // Constructor
 	    MyGraph(){
 	       this.graph = new HashMap<String,ArrayList<Collaboration>>();
 	    }
 
+	    
 	    public Person[] getDirectCollaborators(Person actor){
 	        ArrayList<Collaboration> collaborations = graph.get(actor.getName());
 	       if(collaborations!=null) {
