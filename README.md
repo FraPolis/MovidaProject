@@ -1,9 +1,10 @@
 # Movida Project
-Progetto sviluppato per il corso di Algoritmi e strutture dati.
+Progetto sviluppato per il corso di Algoritmi e Strutture Dati.
 
 ## Gruppo 
+* Nome Gruppo : Caffeine Overflow
 * Filippo Bartolucci - 0000838531
-* Francesco Polisena - 0000XXXXXX
+* Francesco Polisena - 0000731200
 
 ## Progetto
 MOVIDA è un un'applicazione Java per interagire con un knowledge-base a tema cinema. 
@@ -17,6 +18,9 @@ Algortimi di ordinamento implementati:
 * Bubble Sort
 * Heap Sort
 
+## Funzionamento
+Come prima cosa è necessario aver importato MovidaCore,che si trova nel package movida.bartoluccipolisena, per instanziarne la classe;
+Se non si specifica l'algoritmo di ordinamento oppure la struttura dati, vengono utilizzati di default l'algoritmo Bubble Sort e la struttura dati BTree.
 
 ## MovidaCore
 È la parte centrale dell'applicazione e si occupa della gestione delle strutture dati utilizzate:
@@ -37,6 +41,6 @@ MyGraph graph;
 // Grafo con le informazioni relative agli attori
 
  ```
-La funzione ` loadFromFile(File F)` si occupa di caricare i film da un file di testo. I film venfono salvati in `movies` utilizzando la struttura dati scelta con setMap (BTree struttura di default). Contemporanemente alla creazione dei dat per i film viene anche popolato `graph` utilizzato per le collaborazioni tra gli attori.
+La funzione ` loadFromFile(File F)` si occupa di caricare i film da un file di testo. I film venfono salvati in `movies` utilizzando la struttura dati scelta con setMap (BTree struttura di default). Contemporanemente alla creazione dei dati per i film viene anche popolato `graph` utilizzato per le collaborazioni tra gli attori.
  
 # Licenza 
