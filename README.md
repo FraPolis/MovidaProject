@@ -19,7 +19,7 @@ Algortimi di ordinamento implementati:
 * Heap Sort
 
 ## Funzionamento
-Come prima cosa è necessario aver importato MovidaCore,che si trova nel package movida.bartoluccipolisena, per instanziarne la classe;
+Come prima cosa è necessario aver importato MovidaCore,che si trova nel package movida.bartoluccipolisena, per instanziarne la classe.
 Se non si specifica l'algoritmo di ordinamento oppure la struttura dati, vengono utilizzati di default l'algoritmo Bubble Sort e la struttura dati BTree.
 
 ## MovidaCore
@@ -41,6 +41,6 @@ MyGraph graph;
 // Grafo con le informazioni relative agli attori
 
  ```
-La funzione ` loadFromFile(File F)` si occupa di caricare i film da un file di testo. I film venfono salvati in `movies` utilizzando la struttura dati scelta con setMap (BTree struttura di default). Contemporanemente alla creazione dei dati per i film viene anche popolato `graph` utilizzato per le collaborazioni tra gli attori.
+La funzione ` loadFromFile(File F)` si occupa di caricare i film da un file di testo. I film vengono salvati in `movies` utilizzando la struttura dati scelta con setMap (BTree struttura di default). Contemporanemente alla creazione dei dati per i film viene anche popolato `graph` utilizzato per le collaborazioni tra gli attori.
  
 # Licenza 
